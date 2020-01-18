@@ -56,7 +56,7 @@ mkdir -p $(dirname "${LOGFILE_BASE}")
 
 ## Docker params
 CONTVOLS="-v $DATADIR:/data -v $LOGDIR:/results -v $PREPROC_DATADIR:/preproc_data"
-DOCKEREXEC="nvidia-docker run --init --rm --net=host --uts=host --ipc=host --ulimit stack=67108864 --ulimit memlock=-1 --name=cont_${SLURM_JOB_ID} --security-opt seccomp=unconfined $IBDEVICES"
+DOCKEREXEC="docker run --gpus all --init --rm --net=host --uts=host --ipc=host --ulimit stack=67108864 --ulimit memlock=-1 --name=cont_${SLURM_JOB_ID} --security-opt seccomp=unconfined $IBDEVICES"
 
 ## Get version of the OS
 export MLPERF_HOST_OS="$(cat /etc/issue | head -1 | cut -f1-3 -d" ") / $(cat /etc/dgx-release | grep -E "DGX_PRETTY_NAME|DGX_OTA_VERSION" |cut -f2 -d= |cut -f2 -d '"' |paste -sd' ')"

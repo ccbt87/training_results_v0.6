@@ -26,7 +26,7 @@ from ml_perf import utils
 
 N = os.environ.get('BOARD_SIZE', '19')
 
-flags.DEFINE_string('src_dir', 'gs://minigo-pub/ml_perf/',
+flags.DEFINE_string('src_dir', 'gs://minigo-pub/ml_perf/0.6/',
                     'Directory on GCS to copy source data from. Files will be '
                     'copied from subdirectories of src_dir corresponding to '
                     'the BOARD_SIZE environment variable (defaults to 19).')
@@ -52,10 +52,16 @@ def main(unused_argv):
   try:
     for d in ['checkpoint', 'target']:
       # Pull the required training checkpoints and models from GCS.
-      src = os.path.join(FLAGS.src_dir, d, N)
-      dst = os.path.join(FLAGS.dst_dir, d)
+      src = os.path.join(FLAGS.src_dir, d, '*')
+      dst = os.path.join(FLAGS.dst_dir, d, N)
       utils.ensure_dir_exists(dst)
       utils.wait(utils.checked_run(None, 'gsutil', '-m', 'cp', '-r', src, dst))
+
+    wd = os.path.join(FLAGS.dst_dir, 'checkpoint', N, 'work_dir')
+    pattern_wd = os.path.join(wd, 'work_dir', '*')
+    for file in glob.glob(pattern_wd):
+      utils.wait(utils.checked_run(None, 'mv', file, wd))
+    utils.wait(utils.checked_run(None, 'rmdir', wd+'/work_dir'))
 
     # Freeze the target model.
     freeze_graph(os.path.join(FLAGS.dst_dir, 'target', N, 'target'), 2048)

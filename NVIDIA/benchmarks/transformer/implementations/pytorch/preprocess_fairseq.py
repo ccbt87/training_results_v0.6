@@ -14,7 +14,7 @@ import shutil
 
 from fairseq.data import indexed_dataset, dictionary
 from fairseq.tokenizer import Tokenizer, tokenize_line
-from mlperf_log_utils import mlperf_print, mlperf_submission_log, set_seeds, get_rank
+from mlperf_log_utils import mlperf_print, mlperf_submission_log, get_rank
 
 def get_parser():
     parser = argparse.ArgumentParser(description='Data pre-processing: Create dictionary and store data in binary format')

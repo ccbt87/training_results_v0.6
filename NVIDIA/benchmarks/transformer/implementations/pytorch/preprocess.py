@@ -28,8 +28,8 @@ import urllib
 import six
 import urllib.request
 
-from mlperf_log_utils import mlperf_print, mlperf_submission_log, set_seeds, get_rank
-
+from mlperf_log_utils import mlperf_print, mlperf_submission_log, get_rank
+from mlperf_compliance import mlperf_log
 from utils import tokenizer
 
 # Data sources for training/evaluating the transformer translation model.
